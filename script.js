@@ -15,12 +15,24 @@ const loremWords = [
 ];
 
 generateBtn.addEventListener("click", () => {
-  const numWords = parseInt(wordsInput.value) || 1;
+  let numWords = parseInt(wordsInput.value) || 1;
 
-  let result = '';
-  for (let i = 0; i < numWords; i++) {
+  if (numWords < 3) {
+    alert("O número mínimo de palavras é 3.");
+    return;
+  }
+  if (numWords > 300) {
+    alert("O número máximo de palavras é 300.");
+    return;
+  }
+
+  let result = 'Lorem ipsum';
+  let wordCount = 2;
+
+  while (wordCount < numWords) {
     const randomWord = loremWords[Math.floor(Math.random() * loremWords.length)];
-    result += randomWord + (i < numWords - 1 ? ' ' : '');
+    result += ' ' + randomWord;
+    wordCount++;
   }
 
   output.innerText = result;
