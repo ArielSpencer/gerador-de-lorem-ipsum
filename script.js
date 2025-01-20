@@ -5,7 +5,7 @@ const copyBtn = document.getElementById("copyBtn");
 const output = document.getElementById("output");
 
 const loremWords = [
-  "Lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit",
+  "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit",
   "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore",
   "magna", "aliqua", "ut", "enim", "ad", "minim", "veniam", "quis", "nostrud",
   "exercitation", "ullamco", "laboris", "nisi", "ut", "aliquip", "ex", "ea", "commodo",
@@ -14,6 +14,8 @@ const loremWords = [
   "pariatur", "excepteur", "sint", "occaecat", "cupidatat", "non", "proident",
   "sunt", "in", "culpa", "qui", "officia", "deserunt", "mollit", "anim", "id", "est", "laborum"
 ];
+
+const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
 generateBtn.addEventListener("click", () => {
   const numParagraphs = parseInt(paragraphsInput.value) || 1;
@@ -32,25 +34,33 @@ generateBtn.addEventListener("click", () => {
 
   for (let i = 0; i < numParagraphs; i++) {
     let paragraph = '';
+    let capitalizeNextWord = true;
 
     if (i === 0) {
       paragraph = "Lorem ipsum dolor sit amet as, ";
     }
 
-    let wordCount = paragraph.split(' ').length;
+    let wordCount = paragraph.split(' ').filter(word => word).length;
 
     while (wordCount < wordsPerParagraph) {
       const randomWord = loremWords[Math.floor(Math.random() * loremWords.length)];
+      let nextWord = randomWord;
 
-      if (Math.random() < 0.2 && wordCount < wordsPerParagraph - 1) {
-        paragraph += `${randomWord}, `;
-      } else if (Math.random() < 0.1 && wordCount < wordsPerParagraph - 1) {
-        paragraph += `${randomWord}. `;
-      } else {
-        paragraph += `${randomWord} `;
+      if (capitalizeNextWord) {
+        nextWord = capitalizeFirstLetter(randomWord);
+        capitalizeNextWord = false;
       }
 
-      wordCount = paragraph.trim().split(' ').length;
+      if (Math.random() < 0.2 && wordCount < wordsPerParagraph - 1) {
+        paragraph += `${nextWord}, `;
+      } else if (Math.random() < 0.1 && wordCount < wordsPerParagraph - 1) {
+        paragraph += `${nextWord}. `;
+        capitalizeNextWord = true;
+      } else {
+        paragraph += `${nextWord} `;
+      }
+
+      wordCount = paragraph.trim().split(' ').filter(word => word).length;
     }
 
     paragraph = paragraph.trim();
