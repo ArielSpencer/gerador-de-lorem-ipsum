@@ -1,5 +1,6 @@
 const generateBtn = document.getElementById("generateBtn");
-const wordsInput = document.getElementById('words');
+const paragraphsInput = document.getElementById("paragraphs");
+const wordsPerParagraphInput = document.getElementById("wordsPerParagraph");
 const copyBtn = document.getElementById("copyBtn");
 const output = document.getElementById("output");
 
@@ -15,27 +16,52 @@ const loremWords = [
 ];
 
 generateBtn.addEventListener("click", () => {
-  let numWords = parseInt(wordsInput.value) || 1;
+  const numParagraphs = parseInt(paragraphsInput.value) || 1;
+  const wordsPerParagraph = parseInt(wordsPerParagraphInput.value) || 30;
 
-  if (numWords < 3) {
-    alert("O número mínimo de palavras é 3.");
+  if (numParagraphs < 1 || numParagraphs > 100) {
+    alert("O número de parágrafos deve estar entre 1 e 100.");
     return;
   }
-  if (numWords > 300) {
-    alert("O número máximo de palavras é 300.");
+  if (wordsPerParagraph < 10 || wordsPerParagraph > 300) {
+    alert("O número de palavras por parágrafo deve estar entre 10 e 300.");
     return;
   }
 
-  let result = 'Lorem ipsum';
-  let wordCount = 2;
+  let finalText = '';
 
-  while (wordCount < numWords) {
-    const randomWord = loremWords[Math.floor(Math.random() * loremWords.length)];
-    result += ' ' + randomWord;
-    wordCount++;
+  for (let i = 0; i < numParagraphs; i++) {
+    let paragraph = '';
+
+    if (i === 0) {
+      paragraph = "Lorem ipsum dolor sit amet as, ";
+    }
+
+    let wordCount = paragraph.split(' ').length;
+
+    while (wordCount < wordsPerParagraph) {
+      const randomWord = loremWords[Math.floor(Math.random() * loremWords.length)];
+
+      if (Math.random() < 0.2 && wordCount < wordsPerParagraph - 1) {
+        paragraph += `${randomWord}, `;
+      } else if (Math.random() < 0.1 && wordCount < wordsPerParagraph - 1) {
+        paragraph += `${randomWord}. `;
+      } else {
+        paragraph += `${randomWord} `;
+      }
+
+      wordCount = paragraph.trim().split(' ').length;
+    }
+
+    paragraph = paragraph.trim();
+    if (!paragraph.endsWith('.')) {
+      paragraph += '.';
+    }
+
+    finalText += paragraph + '\n\n';
   }
 
-  output.innerText = result;
+  output.innerText = finalText.trim();
   copyBtn.style.display = "inline-block";
 });
 
